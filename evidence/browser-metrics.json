@@ -1,0 +1,82 @@
+[
+  {
+    "id": "R1",
+    "viewport": "desktop",
+    "innerWidth": 1440,
+    "innerHeight": 900,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 4414,
+    "output": "C:\\git\\21_RePlayce\\20260804_tetris\\evidence\\capture-R1-desktop.png"
+  },
+  {
+    "id": "R1",
+    "viewport": "mobile",
+    "innerWidth": 390,
+    "innerHeight": 844,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 9519,
+    "output": "C:\\git\\21_RePlayce\\20260804_tetris\\evidence\\capture-R1-mobile.png"
+  },
+  {
+    "id": "R2",
+    "viewport": "desktop",
+    "innerWidth": 1440,
+    "innerHeight": 900,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 900,
+    "output": "C:\\git\\21_RePlayce\\20260804_tetris\\evidence\\capture-R2-desktop.png"
+  },
+  {
+    "id": "R2",
+    "viewport": "mobile",
+    "innerWidth": 390,
+    "innerHeight": 844,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 844,
+    "output": "C:\\git\\21_RePlayce\\20260804_tetris\\evidence\\capture-R2-mobile.png"
+  },
+  {
+    "id": "R3",
+    "viewport": "desktop",
+    "innerWidth": 1440,
+    "innerHeight": 900,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 988,
+    "output": "C:\\git\\21_RePlayce\\20260804_tetris\\evidence\\capture-R3-desktop.png"
+  },
+  {
+    "id": "R3",
+    "viewport": "mobile",
+    "innerWidth": 390,
+    "innerHeight": 844,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 1341,
+    "output": "C:\\git\\21_RePlayce\\20260804_tetris\\evidence\\capture-R3-mobile.png"
+  },
+  {
+    "id": "R4",
+    "viewport": "desktop",
+    "innerWidth": 1440,
+    "innerHeight": 900,
+    "clientWidth": 1440,
+    "scrollWidth": 1440,
+    "scrollHeight": 900,
+    "output": "C:\\git\\21_RePlayce\\20260804_tetris\\evidence\\capture-R4-desktop.png"
+  },
+  {
+    "id": "R4",
+    "viewport": "mobile",
+    "innerWidth": 390,
+    "innerHeight": 844,
+    "clientWidth": 390,
+    "scrollWidth": 390,
+    "scrollHeight": 1134,
+    "output": "C:\\git\\21_RePlayce\\20260804_tetris\\evidence\\capture-R4-mobile.png"
+  }
+]

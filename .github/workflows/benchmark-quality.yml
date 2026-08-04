@@ -1,0 +1,119 @@
+name: Benchmark quality gates
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify ${{ matrix.trial }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - trial: R1
+            expected-build: failure
+            expected-lint: failure
+            expected-test: success
+            expected-audit: success
+          - trial: R2
+            expected-build: success
+            expected-lint: success
+            expected-test: success
+            expected-audit: success
+          - trial: R3
+            expected-build: success
+            expected-lint: success
+            expected-test: success
+            expected-audit: failure
+          - trial: R4
+            expected-build: failure
+            expected-lint: failure
+            expected-test: failure
+            expected-audit: failure
+
+    defaults:
+      run:
+        working-directory: trials/${{ matrix.trial }}
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        shell: bash
+        run: |
+          if [[ -f package-lock.json ]]; then
+            npm ci
+          else
+            dependency_count=$(node -e "const p=require('./package.json'); console.log(Object.keys(p.dependencies??{}).length+Object.keys(p.devDependencies??{}).length)")
+            if [[ "$dependency_count" -gt 0 ]]; then
+              npm install --ignore-scripts --no-package-lock
+            else
+              echo "No dependencies to install."
+            fi
+          fi
+
+      - name: Build
+        id: build
+        continue-on-error: true
+        run: npm run build --if-present && node -e "if(!require('./package.json').scripts?.build) process.exit(1)"
+
+      - name: Lint
+        id: lint
+        continue-on-error: true
+        run: npm run lint --if-present && node -e "if(!require('./package.json').scripts?.lint) process.exit(1)"
+
+      - name: Test
+        id: test
+        continue-on-error: true
+        run: npm test
+
+      - name: Audit dependencies
+        id: audit
+        continue-on-error: true
+        shell: bash
+        run: |
+          if [[ -f package-lock.json ]]; then
+            npm audit --audit-level=high
+          else
+            node -e "const p=require('./package.json'); if(Object.keys(p.dependencies??{}).length+Object.keys(p.devDependencies??{}).length) process.exit(1)"
+            echo "No dependencies declared; audit passes without a lockfile."
+          fi
+
+      - name: Compare observed results with benchmark baseline
+        env:
+          BUILD_ACTUAL: ${{ steps.build.outcome }}
+          BUILD_EXPECTED: ${{ matrix.expected-build }}
+          LINT_ACTUAL: ${{ steps.lint.outcome }}
+          LINT_EXPECTED: ${{ matrix.expected-lint }}
+          TEST_ACTUAL: ${{ steps.test.outcome }}
+          TEST_EXPECTED: ${{ matrix.expected-test }}
+          AUDIT_ACTUAL: ${{ steps.audit.outcome }}
+          AUDIT_EXPECTED: ${{ matrix.expected-audit }}
+        shell: bash
+        run: |
+          failed=0
+          for gate in BUILD LINT TEST AUDIT; do
+            actual_var="${gate}_ACTUAL"
+            expected_var="${gate}_EXPECTED"
+            actual="${!actual_var}"
+            expected="${!expected_var}"
+            echo "$gate: actual=$actual expected=$expected"
+            if [[ "$actual" != "$expected" ]]; then
+              failed=1
+            fi
+          done
+          exit "$failed"

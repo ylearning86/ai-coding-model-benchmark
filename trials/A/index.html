@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' ws: wss:; font-src 'self'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="description" content="PRISMFALL - ブラウザーで遊べる落ちものブロックパズル。オフラインで動作し、スコアは端末内にのみ保存されます。" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#080a18" />
+    <title>PRISMFALL ─ 光のブロックを積み上げろ</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23101430'/%3E%3Cpath d='M16 5l9 16H7z' fill='%232fd4e0'/%3E%3Cpath d='M16 11l5 10h-10z' fill='%23b45cff'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <div id="app" class="app">
+      <header class="topbar">
+        <div class="brand">
+          <svg class="brand__mark" viewBox="0 0 48 48" role="img" aria-label="PRISMFALL のロゴマーク">
+            <defs>
+              <linearGradient id="brandGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#2fd4e0" />
+                <stop offset="55%" stop-color="#6f7dff" />
+                <stop offset="100%" stop-color="#b45cff" />
+              </linearGradient>
+            </defs>
+            <rect x="2" y="2" width="44" height="44" rx="12" fill="#0e1230" />
+            <path d="M24 8 L38 32 H10 Z" fill="url(#brandGrad)" opacity="0.9" />
+            <path d="M24 17 L32 32 H16 Z" fill="#0e1230" opacity="0.65" />
+            <rect x="19" y="34" width="10" height="6" rx="2" fill="url(#brandGrad)" />
+          </svg>
+          <div class="brand__text">
+            <h1 class="brand__name">PRISMFALL</h1>
+            <p class="brand__tagline">光のブロックを積み上げろ</p>
+          </div>
+        </div>
+        <div class="topbar__right">
+          <span id="status-badge" class="badge" data-status="ready">READY</span>
+          <button id="btn-pause" class="btn btn--ghost" type="button" disabled>一時停止</button>
+          <button id="btn-restart" class="btn btn--ghost" type="button">リスタート</button>
+        </div>
+      </header>
+
+      <main class="stage">
+        <aside class="rail rail--left">
+          <section class="panel panel--preview panel--hold" aria-labelledby="hold-title">
+            <h2 id="hold-title" class="panel__title">HOLD</h2>
+            <canvas id="hold-canvas" class="preview preview--hold" aria-hidden="true"></canvas>
+            <p class="panel__hint">C / Shift</p>
+          </section>
+
+          <section class="panel panel--stats" aria-label="スコア情報">
+            <dl class="stats">
+              <div class="stat stat--wide">
+                <dt>SCORE</dt>
+                <dd id="stat-score">0</dd>
+              </div>
+              <div class="stat">
+                <dt>LEVEL</dt>
+                <dd id="stat-level">1</dd>
+              </div>
+              <div class="stat">
+                <dt>LINES</dt>
+                <dd id="stat-lines">0</dd>
+              </div>
+              <div class="stat">
+                <dt>COMBO</dt>
+                <dd id="stat-combo">-</dd>
+              </div>
+              <div class="stat">
+                <dt>TIME</dt>
+                <dd id="stat-time">0:00</dd>
+              </div>
+              <div class="stat stat--wide">
+                <dt>BEST</dt>
+                <dd id="stat-best">0</dd>
+              </div>
+            </dl>
+          </section>
+        </aside>
+
+        <div class="board-wrap">
+          <div id="board-surface" class="board-surface">
+            <canvas id="board" class="board" aria-label="プレイフィールド" role="img"></canvas>
+            <div id="toast-layer" class="toast-layer" aria-live="polite"></div>
+
+            <div id="overlay" class="overlay" data-mode="ready">
+              <div class="overlay__panel" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
+                <p id="overlay-eyebrow" class="overlay__eyebrow">WELCOME</p>
+                <h2 id="overlay-title" class="overlay__title">PRISMFALL</h2>
+                <p id="overlay-text" class="overlay__text">
+                  光のブロックを積み上げて、横一列をそろえて消していくパズルです。
+                </p>
+                <div id="overlay-summary" class="summary" hidden></div>
+                <label id="nickname-field" class="field" for="nickname">
+                  <span class="field__label">ニックネーム（最大12文字）</span>
+                  <input
+                    id="nickname"
+                    class="field__input"
+                    type="text"
+                    inputmode="text"
+                    autocomplete="off"
+                    spellcheck="false"
+                    maxlength="12"
+                    placeholder="PLAYER"
+                  />
+                </label>
+                <div class="overlay__actions">
+                  <button id="overlay-primary" class="btn btn--primary" type="button">ゲームを開始</button>
+                  <button id="overlay-secondary" class="btn" type="button" hidden>はじめから</button>
+                </div>
+                <p id="overlay-hint" class="overlay__hint"></p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <aside class="rail rail--right">
+          <section class="panel panel--preview panel--next" aria-labelledby="next-title">
+            <h2 id="next-title" class="panel__title">NEXT</h2>
+            <canvas id="next-canvas" class="preview preview--next" aria-hidden="true"></canvas>
+          </section>
+
+          <section class="panel panel--keys" aria-labelledby="keys-title">
+            <h2 id="keys-title" class="panel__title">KEYS</h2>
+            <ul class="keys">
+              <li><kbd>←</kbd><kbd>→</kbd><span>移動</span></li>
+              <li><kbd>↑</kbd><kbd>X</kbd><span>右回転</span></li>
+              <li><kbd>Z</kbd><kbd>Ctrl</kbd><span>左回転</span></li>
+              <li><kbd>↓</kbd><span>ソフトドロップ</span></li>
+              <li><kbd>Space</kbd><span>ハードドロップ</span></li>
+              <li><kbd>C</kbd><span>ホールド</span></li>
+              <li><kbd>P</kbd><kbd>Esc</kbd><span>一時停止</span></li>
+              <li><kbd>R</kbd><span>リスタート</span></li>
+            </ul>
+          </section>
+        </aside>
+      </main>
+
+      <nav id="touchpad" class="touchpad" aria-label="タッチ操作">
+        <button class="pad pad--wide" type="button" data-action="left" aria-label="左に移動">◀</button>
+        <button class="pad" type="button" data-action="rotate-ccw" aria-label="左に回転">⟲</button>
+        <button class="pad" type="button" data-action="rotate-cw" aria-label="右に回転">⟳</button>
+        <button class="pad pad--wide" type="button" data-action="right" aria-label="右に移動">▶</button>
+        <button class="pad" type="button" data-action="hold" aria-label="ホールド">HOLD</button>
+        <button class="pad" type="button" data-action="softdrop" aria-label="ソフトドロップ">▼</button>
+        <button class="pad pad--accent" type="button" data-action="harddrop" aria-label="ハードドロップ">⤓</button>
+        <button class="pad" type="button" data-action="pause" aria-label="一時停止">❚❚</button>
+      </nav>
+
+      <section class="ranking" aria-labelledby="ranking-title">
+        <div class="ranking__head">
+          <h2 id="ranking-title" class="panel__title">LOCAL RANKING</h2>
+          <button id="btn-clear-ranking" class="btn btn--ghost btn--small" type="button">履歴を消去</button>
+        </div>
+        <ol id="ranking-list" class="ranking__list"></ol>
+        <p id="ranking-empty" class="ranking__empty">
+          まだ記録がありません。プレイするとこの端末の中だけに保存されます。
+        </p>
+      </section>
+
+      <footer class="footer">
+        <p>
+          PRISMFALL はオリジナルデザインの落ちものパズルです。スコアはブラウザーの localStorage に保存され、外部へは送信されません。
+        </p>
+      </footer>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

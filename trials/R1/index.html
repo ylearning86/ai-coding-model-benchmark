@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nova Tetris</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="panel game-panel">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Original block puzzle</p>
+            <h1>Nova Tetris</h1>
+          </div>
+          <div class="status-pill" id="status-pill">Playing</div>
+        </header>
+
+        <div class="hud">
+          <div class="metric-card">
+            <span>Score</span>
+            <strong id="score">0</strong>
+          </div>
+          <div class="metric-card">
+            <span>Level</span>
+            <strong id="level">1</strong>
+          </div>
+          <div class="metric-card">
+            <span>Lines</span>
+            <strong id="lines">0</strong>
+          </div>
+        </div>
+
+        <div class="board-area">
+          <div class="playfield" id="playfield" aria-label="Tetris playfield"></div>
+          <div class="right-column">
+            <div class="preview-card">
+              <h2>Next</h2>
+              <div class="mini-grid" id="next-grid"></div>
+            </div>
+            <div class="preview-card">
+              <h2>Hold</h2>
+              <div class="mini-grid" id="hold-grid"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls-row">
+          <button id="pause-btn">Pause</button>
+          <button id="restart-btn">Restart</button>
+          <button id="hard-drop-btn">Hard drop</button>
+        </div>
+
+        <div class="mobile-controls" aria-label="Touch controls">
+          <button data-action="left">◀</button>
+          <button data-action="rotate">⤴</button>
+          <button data-action="soft">▼</button>
+          <button data-action="right">▶</button>
+          <button data-action="hold">Hold</button>
+          <button data-action="hard">Hard</button>
+        </div>
+      </section>
+
+      <aside class="panel side-panel">
+        <section class="card">
+          <h2>How to play</h2>
+          <ul>
+            <li>Move with arrow keys or touch buttons.</li>
+            <li>Rotate with Up or the rotate button.</li>
+            <li>Soft drop with Down, hard drop with Space.</li>
+            <li>Press P to pause and resume.</li>
+          </ul>
+        </section>
+
+        <section class="card">
+          <label for="nickname">Nickname</label>
+          <input id="nickname" maxlength="12" value="Player" />
+        </section>
+
+        <section class="card">
+          <h2>Local ranking</h2>
+          <ol id="ranking"></ol>
+        </section>
+      </aside>
+    </main>
+    <script type="module" src="src/game.js"></script>
+  </body>
+</html>

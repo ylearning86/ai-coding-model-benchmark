@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#09111c">
+  <meta name="description" content="光のブロックを積み上げる落ちものパズル LUMEN FALL">
+  <title>LUMEN FALL</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="masthead">
+      <div>
+        <p class="eyebrow">BLOCK SIGNAL / 07</p>
+        <h1>LUMEN <span>FALL</span></h1>
+      </div>
+      <button id="pauseButton" class="icon-button" type="button" title="一時停止" aria-label="一時停止">Ⅱ</button>
+    </header>
+
+    <section class="game-layout" aria-label="ゲーム画面">
+      <aside class="side-panel left-panel">
+        <section class="mini-panel">
+          <div class="panel-label">HOLD <kbd>C</kbd></div>
+          <canvas id="holdCanvas" class="mini-canvas" width="120" height="96" aria-label="ホールド中のピース"></canvas>
+        </section>
+        <section class="stat-stack" aria-label="ゲーム状況">
+          <div class="stat"><span>SCORE</span><strong id="scoreValue">0</strong></div>
+          <div class="stat-row">
+            <div class="stat"><span>LEVEL</span><strong id="levelValue">1</strong></div>
+            <div class="stat"><span>LINES</span><strong id="linesValue">0</strong></div>
+          </div>
+        </section>
+      </aside>
+
+      <div class="board-wrap">
+        <canvas id="gameCanvas" width="300" height="600" aria-label="10列20行のプレイフィールド"></canvas>
+        <div id="statusOverlay" class="overlay visible">
+          <div class="overlay-content">
+            <p id="overlayKicker">READY SIGNAL</p>
+            <h2 id="overlayTitle">光をつなげ。</h2>
+            <p id="overlayText">← → で移動、↑ で回転<br>Space で一気に落下</p>
+            <label class="name-field">
+              <span>NICKNAME</span>
+              <input id="nicknameInput" maxlength="16" autocomplete="nickname" value="PLAYER" aria-label="ニックネーム">
+            </label>
+            <button id="primaryButton" class="primary-button" type="button">START</button>
+          </div>
+        </div>
+      </div>
+
+      <aside class="side-panel right-panel">
+        <section class="mini-panel next-panel">
+          <div class="panel-label">NEXT</div>
+          <canvas id="nextCanvas" class="mini-canvas" width="120" height="240" aria-label="次のピース"></canvas>
+        </section>
+        <section class="ranking-panel">
+          <div class="panel-label">LOCAL TOP 5</div>
+          <ol id="rankingList" aria-label="ローカルランキング"></ol>
+        </section>
+      </aside>
+    </section>
+
+    <section class="touch-controls" aria-label="タッチ操作">
+      <div class="touch-group">
+        <button data-action="left" type="button" aria-label="左へ移動">←</button>
+        <button data-action="right" type="button" aria-label="右へ移動">→</button>
+      </div>
+      <div class="touch-group">
+        <button data-action="rotate" type="button" aria-label="右回転">↻</button>
+        <button data-action="down" type="button" aria-label="ソフトドロップ">↓</button>
+        <button data-action="drop" class="drop-control" type="button" aria-label="ハードドロップ">⇊</button>
+        <button data-action="hold" type="button" aria-label="ホールド">H</button>
+      </div>
+    </section>
+
+    <footer class="help-strip">
+      <span><kbd>←</kbd><kbd>→</kbd> MOVE</span>
+      <span><kbd>↑</kbd> ROTATE</span>
+      <span><kbd>↓</kbd> SOFT DROP</span>
+      <span><kbd>SPACE</kbd> HARD DROP</span>
+      <span><kbd>C</kbd> HOLD</span>
+      <span><kbd>P</kbd> PAUSE</span>
+    </footer>
+  </main>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

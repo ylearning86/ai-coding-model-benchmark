@@ -1,0 +1,4 @@
+trials/*/node_modules/
+trials/*/dist/
+*.log
+.DS_Store

@@ -1,0 +1,54 @@
+[
+  {
+    "id": "R1",
+    "startClick": "automatic",
+    "xssMarker": null,
+    "malformedStorageRendered": true,
+    "pageErrors": [],
+    "dimensions": {
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 4414
+    }
+  },
+  {
+    "id": "R2",
+    "startClick": "success",
+    "xssMarker": null,
+    "malformedStorageRendered": true,
+    "pageErrors": [],
+    "dimensions": {
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900
+    }
+  },
+  {
+    "id": "R3",
+    "startClick": "success",
+    "xssMarker": null,
+    "malformedStorageRendered": true,
+    "pageErrors": [],
+    "dimensions": {
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 988
+    }
+  },
+  {
+    "id": "R4",
+    "startClick": "success",
+    "xssMarker": null,
+    "malformedStorageRendered": false,
+    "pageErrors": [
+      "highScores.map is not a function",
+      "highScores.map is not a function",
+      "highScores.map is not a function"
+    ],
+    "dimensions": {
+      "clientWidth": 1440,
+      "scrollWidth": 1440,
+      "scrollHeight": 900
+    }
+  }
+]
