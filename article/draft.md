@@ -39,7 +39,7 @@ GitHub Copilotでは複数のAIモデルを選べます。しかし、モデル�
 - **デザイン1位**: GPT-5.6 Sol、27/30
 - **暫定総合1位**: GPT-5.6 Sol、93/100
 - 「完成」と報告されても、build失敗、テスト失敗、保存データによるクラッシュ、9,519pxの画面などが見つかった
-- CodeQLはJavaScript/TypeScriptを分析できるが、非公開リポジトリではGitHub EnterpriseだけでなくGitHub Code Securityの利用権が必要
+- 公開リポジトリでCodeQLを実行し、重大なセキュリティアラート0件、未使用変数のNote 3件を検出
 
 最速、最少Credit、総合1位は別々のモデルでした。単純に高性能モデルを選ぶだけでなく、用途と外部品質ゲートを組み合わせる必要があります。
 
@@ -180,7 +180,7 @@ GPTのLUMEN FALLは、世界観、情報設計、タッチ操作、ビューポ�
 | 3 | MAI-Code-1-Flash | **59/100** |
 | 4 | Gemini 3.6 Flash | **54/100** |
 
-CodeQLとGitHub Code Qualityの実行前なので暫定点です。後から同一原因を複数ツールが検出しても、重複減点はしません。
+CodeQL実行後も同一原因の重複減点は行わず、総合点は変わりませんでした。GitHub Code Qualityは別ライセンスのため未実行です。
 
 ## 5. モデルごとに何が違ったか
 
@@ -222,13 +222,15 @@ CodeQLはJavaScript／TypeScriptを正式サポートし、セキュリティ脆
 - 非公開／内部リポジトリ: GitHub Code Securityの利用権が必要
 - GitHub Enterpriseプランへ所属しているだけでは、自動的にGitHub Code Securityが含まれるとは限らない
 
-今回、`javascript-typescript`と`security-and-quality` query suiteを使うCodeQL Workflowを準備しました。ただし、リポジトリ公開または追加ライセンスの確認前なので、CodeQL結果はまだ総合点へ含めていません。
+今回、公開リポジトリで`javascript-typescript`と`security-and-quality` query suiteを実行しました。ワークフローは成功し、Security重大度付きアラートは0件、未使用ローカル変数のNoteが3件でした。R4の1件は既知のbuild失敗と同一原因だったため、重複減点していません。
 
 ### 6-3. GitHub Code Quality
 
 GitHub Code Qualityは、CodeQLルール、AI検出、カバレッジ、品質しきい値を使って保守性と信頼性を評価できます。GitHub Enterprise本体とは別の利用条件があり、AI検出やCopilot AutofixはAI Creditも消費します。
 
-生成モデルのCredit比較へ混ぜないため、4モデルの生成値を確定した後、外部評価コストとして分離して実行する必要があります。
+今回の個人アカウント所有リポジトリでは、setup APIが`404 Code quality is not available for this repository.`を返しました。公開リポジトリでも個人Free所有では利用できず、GitHub TeamまたはEnterprise Cloud配下のOrganizationとCode Qualityの利用権が必要です。
+
+生成モデルのCredit比較へ混ぜないため、利用できる環境へ移管する場合も、4モデルの生成値を確定した後に外部評価コストとして分離して実行します。
 
 ### 6-4. 代替案
 
@@ -251,7 +253,7 @@ GitHub Code Qualityを利用できない場合は、SonarQube Cloudを4作品す
 
 それ以上に重要だったのは、モデル自身の「完了しました」という報告だけでは品質を判断できなかったことです。AI生成コードでも、CI、依存監査、CodeQL、E2E、破損データテストを、人が書いたコードと同じ品質ゲートへ通す必要があります。
 
-次はGitHubへリポジトリを用意し、CodeQLとGitHub Code Quality、またはSonarQube Cloudを同一条件で実行して暫定点を更新します。
+検証コードと証跡は[公開GitHubリポジトリ](https://github.com/ylearning86/ai-coding-model-benchmark)で確認できます。GitHub Code Qualityは現在の所有形態では利用できないため、追加評価を行う場合はTeam／GHEC Organizationへ移管するか、SonarQube Cloudを同一条件で実行します。
 
 ## 参考リンク
 
@@ -261,6 +263,7 @@ GitHub Code Qualityを利用できない場合は、SonarQube Cloudを4作品す
 - [Code scanning with CodeQL](https://docs.github.com/code-security/code-scanning/introduction-to-code-scanning/about-code-scanning-with-codeql)
 - [Configuring advanced setup for code scanning](https://docs.github.com/code-security/how-tos/find-and-fix-code-vulnerabilities/configure-code-scanning/configuring-advanced-setup-for-code-scanning)
 - [GitHub Code Quality](https://docs.github.com/code-security/code-quality)
+- [GitHub Code Quality billing](https://docs.github.com/en/billing/concepts/product-billing/github-code-quality)
 - [Dependabot alerts](https://docs.github.com/code-security/dependabot/dependabot-alerts/about-dependabot-alerts)
 - [SonarQube Cloud](https://docs.sonarsource.com/sonarqube-cloud/)
 

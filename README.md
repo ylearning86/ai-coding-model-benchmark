@@ -6,15 +6,17 @@ Repository: [ylearning86/ai-coding-model-benchmark](https://github.com/ylearning
 
 ## 現在の状態
 
-Phase 1の4モデル実行、独立build／test／audit、外部Edge E2E、ブラインドデザイン評価まで完了しました。
+Phase 1の4モデル実行、独立build／test／audit、外部Edge E2E、ブラインドデザイン評価、GitHub Actions、CodeQL、Dependabotまで完了しました。
 
 - [Phase 1実測結果](evaluation/results.md)
-- [暫定100点評価](evaluation/preliminary-scores.md)
+- [100点評価](evaluation/preliminary-scores.md)
 - [ブラインドデザイン評価](evaluation/design-review.md)
 - [ブログ初稿](article/draft.md)
 - [比較ヒーロー画像](evidence/hero-comparison.png)
 
-CodeQL WorkflowとGitHub Code Quality向けの評価設計は用意済みですが、CodeQLはまだ実行していません。公開リポジトリ、またはGitHub Code Securityが有効な非公開リポジトリへ配置後に実行します。
+CodeQLは成功し、Security重大度付きアラート0件、未使用ローカル変数のNote 3件を検出しました。Dependabotは正式比較R4にCritical 1、High 1、Medium 3を検出しています。
+
+GitHub Code Qualityは個人アカウント所有の公開リポジトリでは利用できませんでした。GitHub TeamまたはEnterprise Cloud配下のOrganizationと、Code Qualityの利用権が必要です。Secret scanningとPush protectionは有効で、Secret alertは0件です。
 
 ## ローカル再検証
 
